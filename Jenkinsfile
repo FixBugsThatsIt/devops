@@ -1,24 +1,43 @@
 pipeline {
     agent any
-    triggers { githubPush() }
+
+    options {
+        skipDefaultCheckout(true)
+    }
+
+    triggers {
+        githubPush()
+    }
 
     stages {
+
         stage('Checkout') {
-            steps { checkout scm }
+            steps {
+                checkout scm
+            }
         }
+
         stage('Build') {
             steps {
                 bat 'javac -version'
                 bat 'javac App.java AppTest.java'
             }
         }
+
         stage('Test') {
-            steps { bat 'java AppTest' }
+            steps {
+                bat 'java AppTest'
+            }
         }
     }
 
     post {
-        success { echo 'Build stable' }
-        failure { echo 'Build failed' }
+        success {
+            echo 'Build stable'
+        }
+
+        failure {
+            echo 'Build failed'
+        }
     }
 }
